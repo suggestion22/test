@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>든든한 출근길 | 삼성생명 콘셉트 게임 v2</title>
+<meta name="description" content="20초 픽셀 러닝 게임. 비공식 삼성생명 콘셉트 데모.">
+<style>
+:root{--ink:#142e54;--muted:#667d9d;--blue:#1762ce;--blue2:#2879ea;--light:#eaf5ff;--stroke:#d4e3f4;--white:#fff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--ink)}
+body{background:radial-gradient(circle at 88% 4%,#c6e8ff 0,transparent 36%),linear-gradient(140deg,#f6fbff 0%,#e9f3ff 58%,#f8fcff 100%)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.22;background-image:radial-gradient(#8eb8e3 1px,transparent 1px);background-size:22px 22px}
+button{font:inherit;cursor:pointer}button:focus-visible,canvas:focus-visible{outline:3px solid #ffb946;outline-offset:3px}
+.shell{max-width:1140px;margin:auto;padding:29px 24px 28px;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:10px}.brand-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;color:white;background:#1d68cd;font-size:22px;font-weight:900;box-shadow:0 6px 18px #2362c42d}.brand-name{font-size:20px;font-weight:900;letter-spacing:-1px}
+.topnote{border:1px solid #bed6f2;color:#386b9e;background:#ffffffad;padding:8px 12px;border-radius:99px;font-weight:700;font-size:11px;letter-spacing:.3px}
+.hero{display:grid;grid-template-columns:.7fr 1.3fr;align-items:center;gap:36px}
+.intro{padding-bottom:20px}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:#1b63be;background:#dcecff;padding:9px 13px;border-radius:99px;font-size:12px;font-weight:900;letter-spacing:1.8px}.dot{width:7px;height:7px;background:#1b70da;border-radius:100%}.intro h1{font-weight:950;font-size:clamp(37px,4vw,57px);line-height:1.17;letter-spacing:-3px;margin:22px 0 16px}.intro h1 span{color:#176acb}.intro p{line-height:1.8;color:#60799a;letter-spacing:-.4px;font-size:15px;margin:0 0 25px}.mini-guide{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.mini-guide span{background:#fff;border:1px solid #deebf8;border-radius:9px;padding:7px 10px;font-weight:700;font-size:12px;color:#527398}.mini-guide kbd{background:#dceafa;padding:2px 5px;border-radius:5px;font:inherit;color:#2864b6}
+.game-card{background:white;border:1px solid #d3e5f6;box-shadow:0 26px 72px #3b6eae24;border-radius:23px;padding:15px;overflow:hidden}
+.game-title{display:flex;align-items:center;justify-content:space-between;padding:3px 5px 14px;gap:10px;font-weight:900;font-size:14px;letter-spacing:-.35px}.game-title .tag{font-size:10px;background:#edf5ff;color:#4583c4;padding:6px 9px;border-radius:8px;letter-spacing:1px}
+.hud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}.stat{min-width:0;border-radius:11px;background:#eef6ff;padding:10px 11px}.stat small{display:block;font-size:10px;color:#7189a6;margin-bottom:5px;font-weight:800}.stat strong{font-size:19px;font-weight:950;font-variant-numeric:tabular-nums;white-space:nowrap}.stat strong em{font-size:10px;font-style:normal;color:#7996b7}.hearts{color:#f15e78;letter-spacing:2px;font-size:18px!important}.shields{font-size:15px!important}
+.stage{position:relative;overflow:hidden;border-radius:12px;border:3px solid #bedcf4;background:#8bc9f6;aspect-ratio:960 / 420;isolation:isolate;touch-action:manipulation}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated;cursor:pointer}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#103e6a63;backdrop-filter:blur(1.5px);padding:15px;z-index:4}
+.overlay[hidden]{display:none}.modal{background:#ffffffed;box-shadow:0 15px 45px #164c8952;border:2px solid white;border-radius:17px;width:min(365px,98%);padding:20px;text-align:center}.modal .symbol{font-size:32px;display:block;margin-bottom:8px}.modal .micro{font-size:10px;font-weight:900;letter-spacing:2px;color:#2878d8}.modal h2{font-size:25px;line-height:1.25;letter-spacing:-1px;margin:7px 0 9px}.modal p{font-size:12px;line-height:1.7;color:#687f99;margin:0 0 15px}.modal .result{margin:8px auto 12px;font-size:28px;font-weight:900;color:#1968cb}.primary{border:0;border-radius:10px;background:linear-gradient(135deg,#1f75e1,#1357b4);color:white;font-weight:900;padding:12px 19px;box-shadow:0 5px 13px #1b61be37}.primary:hover{filter:brightness(1.07)}.secondary{border:1px solid #cddff3;background:#f7fbff;color:#2464ae;padding:11px 15px;border-radius:10px;font-weight:900}
+.controls{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:12px 2px 1px;flex-wrap:wrap}.controls .tip{font-size:11px;color:#6e89a9;font-weight:700;line-height:1.5}.controls .actions{display:flex;gap:7px}.controls button{font-size:12px;padding:9px 11px}.jump{min-width:100px}
+.instructions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:24px}.instruction{background:#ffffffb8;border:1px solid #e0ebf6;padding:16px;border-radius:16px;display:flex;align-items:flex-start;gap:12px}.num{display:grid;place-items:center;width:29px;height:29px;flex-shrink:0;border-radius:9px;background:#dcecff;color:#2164be;font-size:12px;font-weight:950}.instruction h3{font-size:13px;margin:1px 0 5px;letter-spacing:-.5px}.instruction p{font-size:11px;line-height:1.65;color:#778aa2;margin:0}
+.footer{display:flex;justify-content:space-between;gap:12px;margin-top:20px;color:#7b91a8;font-size:11px;line-height:1.7}.footer strong{color:#3e6eab}
+@media(max-width:880px){.hero{grid-template-columns:1fr;gap:12px}.intro{padding-bottom:8px}.intro h1{font-size:39px;margin:14px 0 9px}.intro p{margin-bottom:14px}.shell{padding:17px 14px 26px}header{margin-bottom:14px}.instructions{margin-top:16px}}
+@media(max-width:550px){.intro h1{font-size:36px}.intro p{font-size:13px}.topnote{font-size:9px}.brand-name{font-size:17px}.game-card{padding:8px;border-radius:15px}.game-title{padding:4px 3px 8px;font-size:12px}.stat{padding:8px 6px}.stat small{font-size:9px}.stat strong{font-size:15px}.hearts{font-size:14px!important}.shields{font-size:12px!important}.stage{border-width:2px}.modal{padding:10px 13px}.modal .symbol{font-size:20px;margin-bottom:1px}.modal h2{font-size:18px;margin:3px 0}.modal p{font-size:10px;margin-bottom:6px;line-height:1.35}.modal .micro{font-size:8px}.modal .primary{padding:7px 12px;font-size:11px}.modal .result{font-size:19px;margin:3px 0 6px}.instructions{grid-template-columns:1fr;gap:8px}.instruction{padding:10px}.controls .tip{max-width:185px;font-size:10px}.footer{flex-direction:column;gap:0}}
+/* Mobile portrait playability: give the canvas and start overlay a real touch target. */
+.runtime-status{display:flex;align-items:center;gap:7px;margin:9px 3px 0;color:#55769a;font-size:11px;font-weight:750;line-height:1.5}
+.runtime-status:before{content:'';width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#ffb45a}
+.runtime-status.ready:before{background:#279a7d}
+.runtime-status.error:before{background:#eb6575}
+@media(max-width:550px){.stage{aspect-ratio:auto;height:clamp(205px,62vw,265px)}.controls .actions{margin-left:auto}.controls .tip{max-width:205px}.modal{width:min(310px,96%)}.modal .symbol{font-size:24px}.modal h2{font-size:18px}.modal p{font-size:11px}.modal .primary{min-height:35px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header><div class="brand"><div class="brand-icon">S</div><span class="brand-name">삼성생명</span></div><div class="topnote">UNOFFICIAL · CONCEPT DEMO</div></header>
+<main>
+<div class="hero">
+<section class="intro"><div class="eyebrow"><span class="dot"></span> PIXEL RUN · 20 SECONDS</div><h1>오늘도 든든한<br><span>출근길!</span></h1><p>바쁜 아침의 작은 모험.<br>위험은 폴짝 뛰어넘고, 보호 아이템을 모아<br>20초 출근길을 완주해 보세요.</p><div class="mini-guide"><span><kbd>SPACE</kbd> 점프</span><span>화면 터치</span><span>하트 3개</span></div></section>
+<section class="game-card" aria-label="출근길 게임">
+<div class="game-title"><span>☀ 든든한 출근 미션</span><span class="tag">MISSION 01 / CITY RUN</span></div>
+<div class="hud" aria-live="polite"><div class="stat"><small>남은 시간</small><strong id="timer">20.0 <em>초</em></strong></div><div class="stat"><small>모은 점수</small><strong id="score">0</strong></div><div class="stat"><small>오늘의 에너지</small><strong id="health" class="hearts">♥♥♥</strong></div><div class="stat"><small>보호 아이템</small><strong id="shield" class="shields">없음</strong></div></div>
+<div class="stage" id="stage"><canvas id="game" width="960" height="420" tabindex="0" aria-label="출근길 점프 게임 캔버스, 스페이스바 또는 터치로 점프"></canvas>
+<div class="overlay" id="overlay"><div class="modal"><span class="symbol" id="overlaySymbol">☀️</span><div class="micro" id="overlayKicker">READY FOR WORK</div><h2 id="overlayTitle">오늘도, 무사히 출근!</h2><p id="overlayDescription">장애물을 피하고 보호 아이템을 모으세요.<br>20초 동안 하트를 지키면 출근 성공!</p><div class="result" id="result" hidden></div><button class="primary" id="start">출근 시작하기 →</button></div></div>
+</div>
+<div id="runtimeStatus" class="runtime-status" role="status" aria-live="polite">게임 준비 중 · 파일 미리보기에서는 버튼이 작동하지 않을 수 있습니다.</div>
+<noscript><p style="color:#b03444;font-weight:800">JavaScript가 차단되어 게임을 시작할 수 없습니다. JavaScript를 허용한 브라우저 또는 GitHub Pages에서 열어주세요.</p></noscript>
+<div class="controls"><div class="tip">⌨ SPACE / ↑ / 화면 터치로 점프 · 같은 색 보호 아이템은 위험 1회 방어</div><div class="actions"><button class="secondary" id="pause">일시정지</button><button class="primary jump" id="jump">점프 ↑</button></div></div>
+</section></div>
+<section class="instructions" aria-label="게임 설명"><article class="instruction"><div class="num">01</div><div><h3>폴짝 점프!</h3><p>한 번에 한 번씩 점프해 출근길의 위험을 피해요.</p></div></article><article class="instruction"><div class="num">02</div><div><h3>보호 아이템 수집</h3><p>같은 색의 위험을 만나면 보호 효과가 자동으로 발동해요.</p></div></article><article class="instruction"><div class="num">03</div><div><h3>20초 출근 성공</h3><p>완주 시 1,000점, 남은 하트마다 200점을 추가로 받아요.</p></div></article></section>
+</main><footer class="footer"><span><strong>삼성생명 콘셉트 비공식 시제품.</strong> 삼성생명이 제작·승인한 공식 게임이 아닙니다.</span><span>게임 내 보호 효과는 실제 보험 보장과 무관합니다.</span></footer>
+</div>
+<script>
+(()=>{
+'use strict';
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+const runtime=document.getElementById('runtimeStatus');
+function status(text,bad=false){runtime.textContent=text;runtime.className='runtime-status '+(bad?'error':'ready')}
+if(!ctx){status('이 브라우저에서는 Canvas 2D를 사용할 수 없습니다.',true);return}
+window.addEventListener('error',e=>{status('게임 실행 오류: '+(e.message||'알 수 없는 오류'),true)});
+
+const ui={timer:document.getElementById('timer'),score:document.getElementById('score'),health:document.getElementById('health'),shield:document.getElementById('shield'),overlay:document.getElementById('overlay'),symbol:document.getElementById('overlaySymbol'),kicker:document.getElementById('overlayKicker'),title:document.getElementById('overlayTitle'),description:document.getElementById('overlayDescription'),result:document.getElementById('result'),start:document.getElementById('start'),pause:document.getElementById('pause'),jump:document.getElementById('jump')};
+const W=960,H=420,FLOOR=341,PLAYER_X=152,TYPES=[{key:'health',label:'건강',color:'#8b66e7',light:'#e7dfff'},{key:'accident',label:'사고',color:'#f0873c',light:'#ffe5c7'},{key:'dental',label:'치아',color:'#2cac8d',light:'#d3f6e8'},{key:'daily',label:'생활',color:'#e5668c',light:'#ffe0e8'}];
+const state={mode:'ready',left:20,score:0,hearts:3,shields:{},objects:[],particles:[],speed:315,spawn:1.35,world:0,bonus:0,player:{x:PLAYER_X,y:FLOOR-58,w:45,h:58,vy:0,onGround:true,invincible:0},last:0};
+function rand(min,max){return min+Math.random()*(max-min)}
+function reset(){state.mode='running';state.left=20;state.score=0;state.hearts=3;state.shields={};state.objects=[];state.particles=[];state.speed=315;state.spawn=1.25;state.world=0;state.bonus=0;Object.assign(state.player,{x:PLAYER_X,y:FLOOR-58,w:45,h:58,vy:0,onGround:true,invincible:0});ui.overlay.hidden=true;ui.pause.textContent='일시정지';updateHUD();status('게임 진행 중 · 화면을 누르거나 점프 버튼을 누르세요.');try{canvas.focus({preventScroll:true})}catch(e){canvas.focus()}}
+function updateHUD(){ui.timer.innerHTML=state.left.toFixed(1)+' <em>초</em>';ui.score.textContent=state.score.toLocaleString('ko-KR');ui.health.textContent='♥'.repeat(state.hearts)+'♡'.repeat(3-state.hearts);let shields=TYPES.filter(t=>state.shields[t.key]);ui.shield.textContent=shields.length?shields.map(t=>['●',t.label].join('')).join(' '):'없음';ui.shield.style.color=shields.length?shields[0].color:'#607f9e'}
+function showOverlay(kicker,title,desc,symbol,button,points){ui.overlay.hidden=false;ui.kicker.textContent=kicker;ui.title.textContent=title;ui.description.innerHTML=desc;ui.symbol.textContent=symbol;ui.start.textContent=button;ui.result.hidden=points===null;ui.result.textContent=points===null?'':points.toLocaleString('ko-KR')+'점'}
+function finish(success){status(success?'완주 성공! 다시 출근하기 버튼으로 재시작할 수 있습니다.':'게임 종료 · 다시 출근하기 버튼으로 재도전하세요.');state.mode=success?'win':'lose';if(success)state.score+=1000+state.hearts*200;updateHUD();showOverlay(success?'MISSION COMPLETE':'TRY AGAIN',success?'무사히 도착했어요!':'조금만 더 힘내요!',success?'20초 출근길 완주 성공!<br>완주 보너스 +1,000 · 하트당 +200':'하트가 모두 소진되었어요.<br>다시 도전해서 출근에 성공해 보세요.',success?'🏁':'💙','다시 출근하기 →',state.score)}
+function jump(){if(state.mode==='ready'||state.mode==='win'||state.mode==='lose'){reset();return}if(state.mode==='paused')return;let p=state.player;if(p.onGround){p.vy=-710;p.onGround=false;for(let i=0;i<7;i++)state.particles.push({x:p.x+rand(4,32),y:FLOOR-3,vx:rand(-100,30),vy:rand(-70,-10),life:.38,max:.38,color:'#c7def3'})}}
+function pause(){if(state.mode==='running'){status('일시정지됨 · 계속 달리기를 누르세요.');state.mode='paused';ui.pause.textContent='계속하기';showOverlay('PAUSED','잠깐 쉬어가요','준비되면 다시 달려보세요.','⏸','계속 달리기 →',null)}else if(state.mode==='paused'){status('게임 진행 중 · 화면을 누르거나 점프 버튼을 누르세요.');state.mode='running';ui.overlay.hidden=true;ui.pause.textContent='일시정지';state.last=performance.now()}}
+function spawn(){const t=TYPES[Math.floor(Math.random()*TYPES.length)],pickup=Math.random()<.38;state.objects.push({x:W+30,y:pickup?FLOOR-122:FLOOR-43,w:pickup?30:39,h:pickup?30:43,type:t,kind:pickup?'shield':'hazard',hit:false,phase:rand(0,6.3)});state.spawn=pickup?rand(.85,1.22):rand(1,1.45)}
+function overlap(a,b){return a.x+8<b.x+b.w-5&&a.x+a.w-8>b.x+5&&a.y+10<b.y+b.h-5&&a.y+a.h-5>b.y+5}
+function boom(x,y,color,n=11){for(let i=0;i<n;i++)state.particles.push({x,y,vx:rand(-165,165),vy:rand(-190,45),life:rand(.3,.66),max:.66,color})}
+function update(dt){if(state.mode!=='running')return;state.left=Math.max(0,state.left-dt);state.world+=state.speed*dt;state.speed=315+(20-state.left)*5;let p=state.player;p.invincible=Math.max(0,p.invincible-dt);p.vy+=1800*dt;p.y+=p.vy*dt;if(p.y>=FLOOR-p.h){p.y=FLOOR-p.h;p.vy=0;p.onGround=true}state.spawn-=dt;if(state.spawn<=0)spawn();for(let o of state.objects){o.x-=state.speed*dt;o.phase+=dt*4;if(!o.hit&&overlap(p,o)){o.hit=true;if(o.kind==='shield'){state.shields[o.type.key]=true;state.score+=60;boom(o.x+15,o.y+15,o.type.color);}
+else if(p.invincible<=0){if(state.shields[o.type.key]){delete state.shields[o.type.key];state.score+=40;boom(p.x+25,p.y+20,o.type.color,14)}else{state.hearts--;p.invincible=1.15;boom(p.x+25,p.y+28,'#f66f82',17);if(state.hearts<=0){finish(false);return}}}}if(o.kind==='hazard'&&o.x+o.w<p.x&&!o.passed){o.passed=true;if(!o.hit)state.score+=20}}
+state.objects=state.objects.filter(o=>o.x+o.w>-20&&!o.hit);for(let particle of state.particles){particle.x+=particle.vx*dt;particle.y+=particle.vy*dt;particle.vy+=530*dt;particle.life-=dt}state.particles=state.particles.filter(p=>p.life>0);if(state.left<=0){finish(true);return}updateHUD()}
+function roundRect(x,y,w,h,r,c){ctx.fillStyle=c;ctx.beginPath();if(typeof ctx.roundRect==='function')ctx.roundRect(x,y,w,h,r);else{let q=Math.min(r,w/2,h/2);ctx.moveTo(x+q,y);ctx.lineTo(x+w-q,y);ctx.quadraticCurveTo(x+w,y,x+w,y+q);ctx.lineTo(x+w,y+h-q);ctx.quadraticCurveTo(x+w,y+h,x+w-q,y+h);ctx.lineTo(x+q,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-q);ctx.lineTo(x,y+q);ctx.quadraticCurveTo(x,y,x+q,y)}ctx.fill()}
+function rect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.ceil(w),Math.ceil(h))}
+function text(t,x,y,size=15,c='#fff',align='center'){ctx.fillStyle=c;ctx.font='900 '+size+'px system-ui,sans-serif';ctx.textAlign=align;ctx.fillText(t,x,y)}
+function drawSky(){const sky=ctx.createLinearGradient(0,0,0,FLOOR);sky.addColorStop(0,'#80c4f5');sky.addColorStop(1,'#d5efff');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ffecb9';ctx.beginPath();ctx.arc(800,79,38,0,7);ctx.fill();ctx.fillStyle='#fff2ca80';ctx.beginPath();ctx.arc(800,79,55,0,7);ctx.fill();for(let i=0;i<7;i++){let x=((i*176+77-state.world*.11)%(W+220)+W+220)%(W+220)-85;let y=45+(i%3)*47;roundRect(x,y,75,18,12,'#f6fcffb5');roundRect(x+19,y-11,39,22,13,'#f6fcffb5')}
+rect(0,237,W,104,'#a3d7f0');for(let i=0;i<18;i++){let x=((i*91-state.world*.19)%(W+110)+W+110)%(W+110)-50;let h=60+(i*37)%86;rect(x,237-h,69,h,'#77afd8');for(let j=0;j<3;j++)for(let k=0;k<4;k++)if((i+j+k)%3!==0)rect(x+11+j*18,245-h+k*23,7,10,'#bbdcf1')}
+for(let i=0;i<12;i++){let x=((i*105+20-state.world*.37)%(W+120)+W+120)%(W+120)-60;let h=90+(i*43)%105;rect(x,286-h,80,h,'#5b99c9');rect(x+8,292-h,64,6,'#4e8bbf');for(let j=0;j<3;j++)for(let k=0;k<5;k++){rect(x+11+j*20,299-h+k*22,9,12,(i+j+k)%4===0?'#e6f7ff':'#8cc5e9')}}
+rect(0,306,W,35,'#6dbca5');for(let i=0;i<25;i++){let x=((i*51-state.world*.7)%(W+55)+W+55)%(W+55)-20;rect(x,302,6,40,'#529e83');rect(x-8,294,22,22,'#459878');rect(x-4,285,13,17,'#5ab78f')}
+rect(0,FLOOR,W,H-FLOOR,'#576f92');rect(0,FLOOR,W,9,'#d9edf1');rect(0,FLOOR+52,W,5,'#8fa7c1');for(let i=0;i<11;i++){let x=((i*109-state.world)%(W+109)+W+109)%(W+109)-90;rect(x,FLOOR+41,61,6,'#ecf6e9')} }
+function drawPlayer(p){if(p.invincible>0&&Math.floor(p.invincible*11)%2===0)return;let x=Math.round(p.x),y=Math.round(p.y),b=Math.sin(state.world*.033)*2;if(!p.onGround)b=0;y+=p.onGround?Math.round(b):0;
+ctx.fillStyle='#314d7999';ctx.beginPath();ctx.ellipse(x+24,FLOOR+5,28,6,0,0,Math.PI*2);ctx.fill();
+rect(x-11,y+19,14,16,'#d5ecff');rect(x-6,y+12,18,24,'#b1d8ff');rect(x+43,y+19,14,16,'#d5ecff');rect(x+42,y+12,11,24,'#a1cff9');
+roundRect(x+8,y+48,12,11,4,'#153e85');roundRect(x+27,y+48,12,11,4,'#153e85');roundRect(x+5,y+24,39,31,9,'#2879da');rect(x+17,y+25,16,6,'#ffcb6a');roundRect(x+15,y+30,19,12,4,'#b0eaff');roundRect(x+1,y+8,46,35,16,'#fff');roundRect(x+6,y+11,36,25,12,'#fff');roundRect(x+13,y+23,5,6,2,'#234675');roundRect(x+32,y+23,5,6,2,'#234675');roundRect(x+20,y+31,8,3,2,'#fc9cb2');rect(x+6,y+8,7,7,'#8cbbf3');rect(x+36,y+8,6,7,'#8cbbf3');roundRect(x+16,y+0,15,11,6,'#2676e1');rect(x+21,y-4,5,6,'#ffce6d');
+}
+function drawObj(o){let x=Math.round(o.x),y=Math.round(o.y+(o.kind==='shield'?Math.sin(o.phase)*4:0));if(o.kind==='shield'){ctx.shadowBlur=19;ctx.shadowColor=o.type.color;ctx.fillStyle=o.type.color;ctx.beginPath();ctx.arc(x+15,y+15,17,0,7);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x+15,y+4);ctx.lineTo(x+25,y+9);ctx.lineTo(x+22,y+23);ctx.lineTo(x+15,y+28);ctx.lineTo(x+8,y+23);ctx.lineTo(x+5,y+9);ctx.closePath();ctx.fill();roundRect(x+12,y+11,6,12,2,o.type.color);rect(x+9,y+15,12,5,o.type.color)}else{roundRect(x,y+7,39,36,6,o.type.color);roundRect(x+5,y,29,17,5,o.type.light);rect(x+10,y+22,6,6,'#fff');rect(x+25,y+22,6,6,'#fff');rect(x+11,y+23,3,3,'#293e68');rect(x+26,y+23,3,3,'#293e68');text('!',x+20,y+17,15,o.type.color)}}
+function draw(){drawSky();for(let o of state.objects)drawObj(o);drawPlayer(state.player);for(let p of state.particles){ctx.globalAlpha=Math.max(0,p.life/p.max);rect(p.x,p.y,5,5,p.color)}ctx.globalAlpha=1;roundRect(15,16,171,30,8,'#ffffffcf');text('GOOD MORNING CITY',100,36,12,'#3072ac');roundRect(W-119,15,105,30,8,'#246dc0dd');text('20s MISSION',W-66,35,12,'#fff')}
+function frame(now){let dt=Math.min((now-state.last)/1000||0,.04);state.last=now;update(dt);draw();requestAnimationFrame(frame)}
+ui.start.addEventListener('click',()=>{if(state.mode==='paused'){pause();return}reset()});ui.pause.addEventListener('click',pause);ui.jump.addEventListener('click',jump);canvas.addEventListener('pointerdown',e=>{e.preventDefault();jump()});window.addEventListener('keydown',e=>{if(['Space','ArrowUp'].includes(e.code)){if(e.repeat)return;e.preventDefault();if(e.target.tagName==='BUTTON')return;jump()}else if(e.code==='KeyP'||e.code==='Escape'){if(state.mode==='running'||state.mode==='paused'){e.preventDefault();pause()}}});updateHUD();status('게임 준비 완료 · 출근 시작하기 버튼을 누르세요.');state.last=performance.now();requestAnimationFrame(frame)
+})();
+</script>
+</body>
+</html>
